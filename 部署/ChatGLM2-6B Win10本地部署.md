@@ -47,5 +47,5 @@ conda install pytorch==1.11.0 torchvision==0.12.0 torchaudio==0.11.0 cudatoolkit
 
 # 4.报错解决
 
-1. 见其报错解决部分，很有参考价值[ChatGLM-6B模型微调实战（以 ADGEN (广告生成) 数据集为例，序列长度达 2048） (yii666.com)](https://www.yii666.com/blog/435808.html)
-2. 主要解决CUDA和pytorch版本问题[服务器的CUDA是哪里来的？pytorch会自动安装CUDA吗？如何选择CUDA版本？nvcc --version的版本和nvidia-smi不一样是怎么回事？pytorch无法使用GPU怎么办？ - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/553023616)
+1. 见其报错解决部分，很有参考价值 [ChatGLM-6B模型微调实战（以 ADGEN (广告生成) 数据集为例，序列长度达 2048） (yii666.com)](https://www.yii666.com/blog/435808.html)
+2. 主要解决CUDA和pytorch版本问题 [服务器的CUDA是哪里来的？pytorch会自动安装CUDA吗？如何选择CUDA版本？nvcc --version的版本和nvidia-smi不一样是怎么回事？pytorch无法使用GPU怎么办？ - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/553023616)
