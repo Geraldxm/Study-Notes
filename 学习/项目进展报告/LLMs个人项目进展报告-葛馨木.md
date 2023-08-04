@@ -9,7 +9,7 @@
 ### &ensp;项目2：Win10下实现ChatPDF
 
 - 我的obsidian链接：[[langchian+ChatGLM 构建本地知识库]]
-- 我的github链接：[MdText/综合开发/langchian+ChatGLM 构建本地知识库.md](https://github.com/GeraldIAD/MdText/blob/e8181364a40ed370eef92b09849e71c3fc8c3eb5/%E7%BB%BC%E5%90%88%E5%BC%80%E5%8F%91/langchian%2BChatGLM%20%E6%9E%84%E5%BB%BA%E6%9C%AC%E5%9C%B0%E7%9F%A5%E8%AF%86%E5%BA%93.md)
+- 我的github链接：[MdText/综合开发/langchian+ChatGLM 构建本地知识库.md](https://github.com/GeraldIAD/MdText/blob/fcaf27ddd458625c65361ff974b4be338ea9f1df/%E7%BB%BC%E5%90%88%E5%BC%80%E5%8F%91/langchian%2BChatGLM%20%E6%9E%84%E5%BB%BA%E6%9C%AC%E5%9C%B0%E7%9F%A5%E8%AF%86%E5%BA%93.md)
 
 ### &ensp;项目3：通过两个昇腾微认证考试
 
