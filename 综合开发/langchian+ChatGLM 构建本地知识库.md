@@ -9,8 +9,7 @@
 - 修改 `LLM_MODEL = "chatglm2-6b"` 
 
 - 如果出现网络问题错误提示，多次重试即可
-- 使用了知识库的检索![[chatpdf_webui_testcss.jpg]]
-- 未使用知识库的检索![[chatpdf_webui_testcss 1.jpg]]
+- 使用了知识库的检索![chatpdf_webui_testcss.jpg](../pics/chatpdf_webui_testcss.jpg)未使用知识库的检索![chatpdf_webui_testcss_1.jpg](../pics/chatpdf_webui_testcss_1.jpg)
 
 ## 问题和解决
 
