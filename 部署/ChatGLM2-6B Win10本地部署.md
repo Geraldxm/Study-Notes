@@ -1,9 +1,9 @@
 # 0. 基本环境
 
-CPU: AMD Ryzen 7 5800H
-GPU: Nvidia GeForce RTX 3060 Laptop 6G
-RAM: DDR4 3200 64G
-OS: Win10 22H2
+- CPU: AMD Ryzen 7 5800H
+- GPU: Nvidia GeForce RTX 3060 Laptop 6G
+- RAM: DDR4 3200 64G
+- OS: Win10 22H2
 # 1. 工程文件准备
 
 ```cmd
@@ -12,7 +12,7 @@ git clone https://github.com/THUDM/ChatGLM2-6B
 
 需要修改部分.py文件中（如`cli_demo.py web_demo.py api.py`等）的模型路径`THUDM/chatglm2-6b`为`..\\model`，此为windows环境下表示目录层级的双反斜杠，而非Linux下的单一斜杠`/`。
 
-#  2.python环境
+#  2. python环境
 
 用conda创建环境，安装所有依赖的源
 
