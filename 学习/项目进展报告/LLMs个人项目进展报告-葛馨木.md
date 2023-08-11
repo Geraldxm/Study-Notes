@@ -13,7 +13,7 @@
 
 ### &ensp;项目3：通过两个昇腾微认证考试
 
-- 我的obsidian链接：[[初识开发者套件 Atlas 200I DK A2]]
+- 我的obsidian链接：[[开发者套件使用笔记 Atlas 200I DK A2]]
 - 我的github链接：[Mdtext/学习/华为/初识开发者套件 Atlas 200I DK A2.md](https://github.com/GeraldIAD/MdText/blob/06ff37406d6736a9333e8ebab3a9c6260caa6e65/%E5%AD%A6%E4%B9%A0/%E5%8D%8E%E4%B8%BA/%E5%88%9D%E8%AF%86%E5%BC%80%E5%8F%91%E8%80%85%E5%A5%97%E4%BB%B6%20Atlas%20200I%20DK%20A2.md)
 
 ------
