@@ -76,5 +76,5 @@ python om_infer_app.py --input-dir [path] # 指定摄像头图像保存的目录
   
   5. 若难以选定单人，则同时选定人和物品
 3. 得到训练完毕的文件，上传到 `Atlas 200I DK A2 开发板` 中。
-4. 参考 [官方文档](https://www.hiascend.com/document/detail/zh/Atlas200IDKA2DeveloperKit/23.0.RC1/Getting%20Started%20with%20Application%20Development/iaqd/iaqd_0010.html)转格式等。
+4. 参考 [官方文档](https://www.hiascend.com/document/detail/zh/Atlas200IDKA2DeveloperKit/23.0.RC1/Getting%20Started%20with%20Application%20Development/iaqd/iaqd_0010.html) 格式等。
 5. 参考 `om_infer.py` ，加上自己的摄像头捕获、计数、计时、播放警告、显示图像等逻辑，编写 `om_infer_app.py` 。具体运行方式见 `4.作品使用说明`。
