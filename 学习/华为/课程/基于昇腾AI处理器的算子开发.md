@@ -18,4 +18,3 @@
 ![](../../../pics/TBE_suanzi_1.jpg)
 1. 算子实际上就是python的一个方法
 2. ![](../../../pics/suanzi_shixian_1.jpg)
-3. 
