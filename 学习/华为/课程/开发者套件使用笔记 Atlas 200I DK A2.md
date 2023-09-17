@@ -74,7 +74,7 @@ ping 192.168.137.xx
 
 ## 两种登录方式
 
-0. 开发板接口默认IP
+1. 开发板接口默认IP
 
 ![IP地址](https://www.hiascend.com/doc_center/source/zh/Atlas200IDKA2DeveloperKit/23.0.RC1/qs/figure/zh-cn_image_0000001623522381.png)
 
@@ -82,7 +82,7 @@ ping 192.168.137.xx
 
 &emsp;&emsp;&emsp;用键鼠链接USB口，显示器链接HDMI口，接电源。
 
-2. 远程登录模式
+3. 远程登录模式
 
 &emsp;&emsp;&emsp;用Type-C(套件)转RJ45(电脑)，或双RJ45连接电脑。==电脑端一定是RJ45连接==
 
