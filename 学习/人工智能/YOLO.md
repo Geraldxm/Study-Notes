@@ -27,16 +27,17 @@
 ### &emsp;Yolo v5
 
 - Input 输入端
+	- 单张图像，分为RGB三个通道，尺寸固定。
 	- Mosaic数据增强
 	- 自适应锚框计算
 	- 自适应图片缩放
-
 - Beckbone 骨干部分
-	- Focus结构
-	- CSP结构
-
+	- Focus结构，主要用于降低图像分辨率，将一张4a * 4a的图像以像素为单位进行拆分，成为4个a * a的图像
+	- CBL结构，即ConvBLock，由一个3x3卷积、一个BatchNorm层和一个LeakyRelu层构成
+	- CSP结构，先过一个CBL，再过m层ResUnit，此为一个分支；另外一个分支是输入仅进行一次卷积。两个分支合并后，进行归一化、激活函数和CBL层产生输出，形成了一个CSP层。
 - Neck 解码部分
 	- FPN+PAN结构
-
 - Prediction 预测部分
 	- GIOU_Loss
+- 输出部分：
+	- (分类数 + 5(x坐标，y坐标，宽，高，置信度)) * n个anchor（n个尺度下）

@@ -27,7 +27,7 @@
 ## 修改开发板默认IP
 
 ```bash
-# cd /etx/netplan
+# cd /etc/netplan
 # vi 01[tab]
 ```
 
@@ -49,6 +49,7 @@ ping 192.168.137.xx
 2. 选择连接外部网络的网络属性，勾选`允许其他网络用户通过此计算机的Internet连接来连接`
 3. 以修改后的IP登录开发板
 4. 以 `curl www.baidu.com` 测试联网是否成功
+5. ==注意==，共享后 PC 的 IP 可能发生变化，如 PC 的 IP 从 192.168.137.101 变成了 192.168.137.1，那么需要将 开发板上的 /etc/netplan/01-netcfg.yaml 的 eth1 改为如图：![[atlas_200i_dk_a2_netcfg.jpg]]
 
 ## 路由器给开发板分配动态IP
 
