@@ -1,7 +1,7 @@
 # NLP - 自然语言处理
 
 
-#### Byte Pair Encoding (BPE) - 字节对编码
+## Byte Pair Encoding (BPE) - 字节对编码
 
 - 提出背景：
 	- 对中文和英文来说，字符级别的嵌入都有一定的困难：英文中有意义的文本会比较长(输入序列对应的时间步较多)，训练慢，遗忘严重；中文有几万个字(分类标签较多)，训练慢。
@@ -17,15 +17,69 @@
 - 将所有未知单词都替换为一个特殊的OOV标记，然后将其当做一个单独的单词来处理。
 	- 但是这种方法可能会导致模型的性能下降，因为OOV标记无法提供关于未知单词的任何语义信息。
 
-## GPT-2
+## GPT-2 - Languager Models are Unsupervised Multitask Learners
 
-- Languager Models are Unsupervised Multitask Learners
+### abstract and intro
 - 在之前的机器学习系统中，主要方法是收集一组训练示例数据集，展示其正确行为，训练系统模仿这些行为。
 	- 有助于创建专家系统，但是在输入多样性的表现上不稳定
-- GPT-2
-### 
+- GPT-2 在WebText (大型网页数据集) 上训练，没有在明确监督的情况下可以学习到很多任务。**(对应了标题 Unsupervised Multitask Learners)**
+	- 希望一个更通用的系统，不需要位每个任务手动创建和标记训练数据集
+	- “我们猜测，一个具有足够能力的语言模型将开始学习推断和执行自然语言序列中展示的任务，以便更好地预测它们，而不管它们的获取方法如何”
+
+### approach
+- core is language modeling
+- 学习单一任务表示 p(output | input)
+- 通用系统表示为 p(output | intput, task)
+	- 在很多领域中，任务切换都得在架构级别实现
+	- 而语言提供了一种灵活的方式指定任务
+		- 翻译任务可以写成 (translate to French，English text，French text)
+		- 阅读理解任务可以写成(answer the question，document，question，answer)
+		- MQAN就是这样一种Single Model
+			- 记忆-问题-答案网络，一种深度学习模型，根据给定的输入格式（问题和相关文本信息）回答问题
+			- 核心在于记忆机制，该机制允许模型存储和检索信息
+#### Dataset - WebText
+- 没有采用传统的文本数据集，而是创建了一个强调文档质量的抓虫
+	- 抓取了reddit的出站链接（通过reddit上的karma来评判链接是否有意义、有趣）
+	- 得到了WebText
+- **WebText**
+	- 45M 链接内的文本数据
+	- 去重和清洗，大约 8M 个文档，40GB 文本
+	- 删除了所有 Wikipedia 文档，因为可能在评估任务中出现
+#### Input Representation - BPE
+- "通用语言模型（LM）应该能够计算（并生成）任何字符串的概率。"
+- 预处理步骤通常有：小写化，tokenizaiton、OOV
+	- 会限制语言模型的能力
+- **byte-level LMs** vs. **word-level LMs**
+	- byte级别可以用utf-8字节序列表示unicode字符串，但是目前 byte LMs 处理能力不如 word LMs
+- **BPE (Byte Pair Encoding)** on Byte Level
+	- 字节对编码，尽管名称中含有“Byte”，但是实际上通常处理的是Unicode码点而不是字节
+	- 如果采用Unicode码点，初始字典就会有130000+
+	- 在GPT-2中，采用的是字节维度。初始字典只有 256个 UTF-8字符，其他任何字符只需要通过合并即可组成
+	- 最终将词汇量扩展到50257 = 256 + 50000 + 1 "<|endoftext|>"
+
+#### Model - Transformer
+- 调整Transformer的decoder，将Layer normalization移动到每个decoder子块的输入位置，并在最后一个decoder子块后添加一个额外的Layer normalization
+- 初始化时残差层的权重乘以 $\frac{1}{\sqrt{N}}$, $N$是残差层的数量，抑制残差流内方差累计的方法
+- BPE词汇量扩大到50257个
+- batch size大小设为512
+
+### Experients
+- CBT: 儿童书测试，命名实体、动词、介词
+- LAMBADA: 预测句子最后一个单词，对文本长距离依赖的建模
+- Winograd Schema: 句子歧义理解
+- Reading Comprehension, Summarization, Translation, Question Answering
 
 # ML - 机器学习
+
+## 偏差-方差-噪声
+
+- 泛化误差 = 偏差 + 方差 + 噪声
+- 偏差指的是算法的期望预测与真实值之间的偏差程度，反映了模型本身的拟合能力；
+- 方差度量了同等大小的**训练集的变动导致学习性能的变化**，刻画了数据扰动所导致的影响
+
+## micrograd 自动微分
+
+
 
 ## LoRA
 
@@ -336,3 +390,29 @@ ResNet，即残差网络，是一种深度学习模型，它通过引入“残�
 
 # Reinforcement Learning - 强化学习
 
+# GPU Coding
+
+## PCIe/SXM?
+
+-  PCIe (Peripheral Component Interconnect Express)：一种高速串行计算机扩展总线标准，英特尔2001年提出。
+- SXM：英伟达设计的接口，它支持更高的显存带宽和更强的计算能力。SXM接口的GPU通常用于英伟达的DGX系统板上，通过NVLink技术实现多个GPU之间的高速互联，支持多达8块GPU卡的互联互通
+
+| 参数/版本                      | A100 80GB SXM  | A100 80GB PCIe                   |
+| -------------------------- | -------------- | -------------------------------- |
+| **接口类型**                   | SXM4           | PCIe                             |
+| **显存容量**                   | 80GB HBM2e     | 80GB HBM2e                       |
+| **显存带宽**                   | 2039GB/s       | 1935GB/s                         |
+| **FP64性能**                 | 9.7 TFLOPS     | 9.7 TFLOPS                       |
+| **Tensor Float 32性能**      | 156 TFLOPS     | 312 TFLOPS*                      |
+| **BFLOAT16 Tensor Core性能** | 312 TFLOPS     | 624 TFLOPS*                      |
+| **FP16 Tensor Core性能**     | 312 TFLOPS     | 624 TFLOPS*                      |
+| **INT8 Tensor Core性能**     | 624 TOPS       | 1248 TOPS*                       |
+| **最大热设计功耗 (TDP)**          | 400 瓦          | 300 瓦                            |
+| **连接技术**                   | NVLink 600GB/s | NVLink 600GB/s 或 PCIe 4.0 64GB/s |
+
+## Precision
+- FP32：IEEE标准，32位 = 1符号位 + 8指数位 + 23尾数位
+- TF32：Nvidia TensorFloat，实际上是19位，19位 = 1符号 位 + 8指数位 + 10尾数位
+- FP16：16位 = 1符号位 + 5指数位 + 10尾数位
+- BF16：16位 = 1符号位 + 8指数位 + 7尾数位
+- INT8：8位 整数表示，用于量化后的神经网络推理
