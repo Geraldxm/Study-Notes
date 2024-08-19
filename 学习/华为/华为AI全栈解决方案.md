@@ -1,1 +1,0 @@
-![华为AI全栈解决方案](../../pics/huawei_ai_full_stack_solution.jpg)
