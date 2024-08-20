@@ -22,7 +22,9 @@ Perception - Imagination - Execution
 
 Perception：全感知 or 具身交互感知
 
-Imagination：
+Imagination：想象，具身任务模拟
+
+Execution：执行
 
 ## 相关模型
 ### Google - PaLM-E
@@ -45,9 +47,20 @@ SAM证明，多种多样的分割任务是可以被一个通用大模型涵盖�
 
 研究者使用ChatGPT生成机器人的高层控制代码，从而可以通过自然语言和ChatGPT交流，使用ChatGPT来控制机械臂、无人机、移动机器人等机器人。
 
+
+
 # NLP - 自然语言处理
 
 ## T5
+
+T5, Text-to-Text Transfer Transformer，将翻译、分类、回归、摘要生成等任务统一转为Text-to-Text任务，使他们在训练时能够使用相同的目标函数。
+
+### 和原始transformer的不同点
+
+- remove the Layer Norm bias
+- place the Layer Normalization outside the residual path
+- use a different position embedding
+
 ## Byte Pair Encoding (BPE) - 字节对编码
 
 - 提出背景：
@@ -56,6 +69,8 @@ SAM证明，多种多样的分割任务是可以被一个通用大模型涵盖�
 		- 控制词汇表规模，大家做了很多尝试:去除停用词；对英文文本做tokenization；将“不重要的”字、词替换为统一的符号；将数字替换为统一的符号；(中文中)将英文字符替换为统一的符号；字嵌入
 - 字节对编码，BPE
 	- 用一个新代号表示数据中最常见的bigram(可以是字节对、字符对、词语对等等)，不断迭代
+
+
 ## OOV问题(词汇表外)
 
 ### 产生原因
@@ -100,13 +115,13 @@ SAM证明，多种多样的分割任务是可以被一个通用大模型涵盖�
 	- byte级别可以用utf-8字节序列表示unicode字符串，但是目前 byte LMs 处理能力不如 word LMs
 - **BPE (Byte Pair Encoding)** on Byte Level
 	- 字节对编码，尽管名称中含有“Byte”，但是实际上通常处理的是Unicode码点而不是字节
-	- 如果采用Unicode码点，初始字典就会有130000+
-	- 在GPT-2中，采用的是字节维度。初始字典只有 256个 UTF-8字符，其他任何字符只需要通过合并即可组成
+		- 但是如果采用Unicode码点，初始字典就会有130000+
+	- 因此在GPT-2中，采用的是字节维度。初始字典只有 256个 UTF-8字符，其他任何字符只需要通过合并即可组成
 	- 最终将词汇量扩展到50257 = 256 + 50000 + 1 "<|endoftext|>"
 
 #### Model - Transformer
 - 调整Transformer的decoder，将Layer normalization移动到每个decoder子块的输入位置，并在最后一个decoder子块后添加一个额外的Layer normalization
-- 初始化时残差层的权重乘以 $\frac{1}{\sqrt{N}}$, $N$是残差层的数量，抑制残差流内方差累计的方法
+- 初始化时残差层的权重乘以 $\frac{1}{\sqrt{N}}$, $N$是残差层的数量，抑制**残差流内方差累计**的方法
 - BPE词汇量扩大到50257个
 - batch size大小设为512
 
