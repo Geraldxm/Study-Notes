@@ -55,11 +55,49 @@ SAM证明，多种多样的分割任务是可以被一个通用大模型涵盖�
 
 T5, Text-to-Text Transfer Transformer，将翻译、分类、回归、摘要生成等任务统一转为Text-to-Text任务，使他们在训练时能够使用相同的目标函数。
 
-### 和原始transformer的不同点
+### **和原始transformer的不同点**
 
 - remove the Layer Norm bias
+	- 原先的layer norm在归一化的张量后要训练缩放因子 $\gamma$ 和偏置 $\beta$ ，得到最终的 $y=\gamma\hat{x}+\beta$ ，现在移去了bias
 - place the Layer Normalization outside the residual path
+	- 
 - use a different position embedding
+
+### **数据集 - C4**
+
+作者对公开爬取的网页数据集Common Crawl进行了过滤，去掉一些重复的、低质量的，看着像代码的文本等，并且最后只保留英文文本，得到数据集C4: the Colossal Clean Crawled Corpus。
+
+
+### **输入输出格式**
+
+在下游任务上fine-tune模型时，为了告诉模型当前要做何种任务，我们会给每条输入样本加一个与具体任务相关的前缀。
+
+- 翻译前缀translate English to German:
+- 分类前缀cola sentence:
+- 摘要前缀summarize:
+
+注意这里每个任务前缀的选择可以认为是一种超参，即人为设计前缀样式。作者发现不同的前缀对模型的影响有限，因此没有做大量实验比较选择不同前缀的结果。
+
+
+### **网络结构**
+
+不同于BERT或GPT仅使用Transformer结构的一部分，T5的baseline模型直接采用标准的Transformer encoder-decoder结构，以便在生成任务和分类任务上都能取得不错的效果。 具体来说，baseline模型结构的encoder部分和BERT-base模型(12层)的大小一样，而decoder部分和encoder大小相似，因此baseline模型的参数量基本是BERT-base模型的2倍。
+
+### **预训练目标**
+
+类似BERT的masked language modeling目标函数。
+
+
+## 掩码语言建模 - MLM
+
+Masked Language Modeling，输入文本中的一些单词会被随机遮蔽（通常用一个特殊的标记，如`[MASK]`），模型的任务是根据上下文预测这些被遮蔽的单词。
+
+### **具体步骤**
+
+1. **输入文本处理**：从输入句子中随机选择一定比例的单词（例如15%），将它们替换为`[MASK]`标记。
+2. **模型训练**：模型接收包含`[MASK]`标记的句子，并尝试预测这些被遮蔽的单词。模型的输出是对每个被遮蔽位置的单词的概率分布。
+3. **损失计算**：使用交叉熵损失函数计算模型预测的概率分布与真实单词之间的差异。目标是最小化这个损失。
+
 
 ## Byte Pair Encoding (BPE) - 字节对编码
 
@@ -132,6 +170,23 @@ T5, Text-to-Text Transfer Transformer，将翻译、分类、回归、摘要生�
 - Reading Comprehension, Summarization, Translation, Question Answering
 
 # ML - 机器学习
+
+## BatchNorm & LayerNorm
+
+BN抹平了不同特征之间的大小关系，而保留了不同样本之间的大小关系。LN抹平了不同样本之间的大小关系，而保留了不同特征之间的大小关系。
+
+1. **归一化的维度**：
+    
+    - **Batch Norm**：在小批量的维度上进行归一化，通常是对每个特征在整个批量中的均值和方差进行计算。
+    - **Layer Norm**：在每个样本的特征维度上进行归一化，计算每个样本所有特征的均值和方差。
+2. **适用场景**：
+    
+    - **Batch Norm**：适用于批量大小较大的情况，通常在卷积神经网络（CNN）中使用。
+    - **Layer Norm**：适用于批量大小较小或为1的情况，常用于循环神经网络（RNN）和自然语言处理任务。
+3. **训练和推理阶段的表现**：
+    
+    - **Batch Norm**：在推理阶段使用全局均值和方差（在训练阶段计算的移动平均），可能导致推理时的性能不稳定。
+    - **Layer Norm**：在训练和推理阶段表现一致，因为它只依赖于当前样本的特征。
 
 ## 偏差-方差-噪声
 
