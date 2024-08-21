@@ -8,15 +8,14 @@ Andrej Karpathy
 - GitHub repo for the video: [https://github.com/karpathy/ng-video-...](https://github.com/karpathy/ng-video-lecture) 
 - 数据集：莎士比亚集，一百万字符
 - 优化过程：
-	1. 
-	2. 最简单的二元
-	3. 单头注意力：token之间交流 2.8
-	4. 多头注意力：并行运行多个单头注意力，减少head大小，增加头数量
-	5. 多头注意力+MLP：每个token可以在MLP下进行更多的思考
-	6. 多层块：一个块是`多头注意力+MLP` 
-	7. 残差连接：在多头注意力和MLP中加入跳跃连接，使深度网络也可以得到训练 val_loss = 2.08，并且开始过拟合
-	8. LayerNorm：与attention论文不同，在self_attention和MLP前使用`Add&Norm` ，使每个token标准化 val_loss = 2.06
-	9. dropout以及更深的层：val_loss = 1.48，train_loss = 1.07，可以产生比较像莎士比亚的输出了。
+	1. 最简单的二元
+	2. 单头注意力：token之间交流 2.8
+	3. 多头注意力：并行运行多个单头注意力，减少head大小，增加头数量
+	4. 多头注意力+MLP：每个token可以在MLP下进行更多的思考
+	5. 多层块：一个块是`多头注意力+MLP` 
+	6. 残差连接：在多头注意力和MLP中加入跳跃连接，使深度网络也可以得到训练 val_loss = 2.08，并且开始过拟合
+	7. LayerNorm：与attention论文不同，在self_attention和MLP前使用`Add&Norm` ，使每个token标准化 val_loss = 2.06
+	8. dropout以及更深的层：val_loss = 1.48，train_loss = 1.07，可以产生比较像莎士比亚的输出了。
 
 
 我们构建了一个生成式预训练转换器（GPT），遵循《注意力就是你所需要的一切》和OpenAI的GPT-2/GPT-3论文。我们讨论了与ChatGPT的联系，ChatGPT已经席卷了全球。我们观察GitHub Copilot（本身就是一个GPT）帮助我们编写一个GPT（元：D！）。我建议人们观看早期的makemore视频，以熟悉自回归语言建模框架以及张量和PyTorch nn的基础知识，我们在本视频中将其视为理所当然。
