@@ -1,174 +1,4 @@
-# Embodied Intelligence - 具身智能
-
-AI的下一个浪潮是具身智能。
-
-	特斯拉 2023 年股东会上，马斯克表示，人形机器人将是今后特斯拉主要的长期价值来源，“如果人形机器人和人的比例是 2 比 1 左右，那么人们对机器人的需求量可能是100 亿乃至 200 亿个，远超电动车的数量”。英伟达创始人黄仁勋在 ITF World 2023 半导体大会上也表示，AI 下一个浪潮将是“具身智能”。
-
-具身智能几乎涉及了人工智能的所有领域。
-
-	自然语言理解、逻辑推理、机器视觉、运动控制、机器学习、运动规划、机械控制
-
-相关产业
-
-- 传感器：触觉+视觉+声音传感器、机器视觉
-- 执行器：减速器（30%）、伺服系统（20%）、微电机（10%）等
-- 控制：控制器、工控系统、AI系统
-
-生产力增长，带来经济增长，就业机会增加，社会福利改善。
-
-## PIE 结构
-
-Perception - Imagination - Execution
-
-Perception：全感知 or 具身交互感知
-
-Imagination：想象，具身任务模拟
-
-Execution：执行
-
-## 相关模型
-### Google - PaLM-E
-
-PaLM-E本身是个多模态的大模型，不仅能理解文本，还能理解图片（ViT），可以理解图片中的语义信息
-
-### Nvidia - VIMA
-
-三种token类型：text, image(object), action
-
-### Meta - SAM
-
-Segment Anything Model（SAM，分割一切模型），根据文本指令等方式实现图像分割。零样本（zero-shot）或简单prompt下，对任意图片进行精细分割。
-
-SAM证明，多种多样的分割任务是可以被一个通用大模型涵盖的。
-
-我们期待一个模型可以无监督完成分割、检测、识别、跟踪等所有CV任务，届时视觉大模型应用会得到极大发展。
-
-### Microsoft Research - ChatGPT for Robotics
-
-研究者使用ChatGPT生成机器人的高层控制代码，从而可以通过自然语言和ChatGPT交流，使用ChatGPT来控制机械臂、无人机、移动机器人等机器人。
-
-
-
-# NLP - 自然语言处理
-
-## T5
-
-T5, Text-to-Text Transfer Transformer，将翻译、分类、回归、摘要生成等任务统一转为Text-to-Text任务，使他们在训练时能够使用相同的目标函数。
-
-### **和原始transformer的不同点**
-
-- remove the Layer Norm bias
-	- 原先的layer norm在归一化的张量后要训练缩放因子 $\gamma$ 和偏置 $\beta$ ，得到最终的 $y=\gamma\hat{x}+\beta$ ，现在移去了bias
-- place the Layer Normalization outside the residual path
-	- 
-- use a different position embedding
-
-### **数据集 - C4**
-
-作者对公开爬取的网页数据集Common Crawl进行了过滤，去掉一些重复的、低质量的，看着像代码的文本等，并且最后只保留英文文本，得到数据集C4: the Colossal Clean Crawled Corpus。
-
-### **输入输出格式**
-
-在下游任务上fine-tune模型时，为了告诉模型当前要做何种任务，我们会给每条输入样本加一个与具体任务相关的前缀。
-
-- 翻译前缀translate English to German:
-- 分类前缀cola sentence:
-- 摘要前缀summarize:
-
-注意这里每个任务前缀的选择可以认为是一种超参，即人为设计前缀样式。作者发现不同的前缀对模型的影响有限，因此没有做大量实验比较选择不同前缀的结果。
-
-### **网络结构**
-
-不同于BERT或GPT仅使用Transformer结构的一部分，T5的baseline模型直接采用标准的Transformer encoder-decoder结构，以便在生成任务和分类任务上都能取得不错的效果。 具体来说，baseline模型结构的encoder部分和BERT-base模型(12层)的大小一样，而decoder部分和encoder大小相似，因此baseline模型的参数量基本是BERT-base模型的2倍。
-
-### **预训练目标**
-
-类似BERT的masked language modeling目标函数。
-
-
-## 掩码语言建模 - MLM
-
-Masked Language Modeling，输入文本中的一些单词会被随机遮蔽（通常用一个特殊的标记，如`[MASK]`），模型的任务是根据上下文预测这些被遮蔽的单词。
-
-### **具体步骤**
-
-1. **输入文本处理**：从输入句子中随机选择一定比例的单词（例如15%），将它们替换为`[MASK]`标记。
-2. **模型训练**：模型接收包含`[MASK]`标记的句子，并尝试预测这些被遮蔽的单词。模型的输出是对每个被遮蔽位置的单词的概率分布。
-3. **损失计算**：使用交叉熵损失函数计算模型预测的概率分布与真实单词之间的差异。目标是最小化这个损失。
-
-
-## Byte Pair Encoding (BPE) - 字节对编码
-
-- 提出背景：
-	- 对中文和英文来说，字符级别的嵌入都有一定的困难：英文中有意义的文本会比较长(输入序列对应的时间步较多)，训练慢，遗忘严重；中文有几万个字(分类标签较多)，训练慢。
-	- 词嵌入的困难就更明显了，当前主要语言的词汇表都是十万级别大小，导致模型训练非常耗时。
-		- 控制词汇表规模，大家做了很多尝试:去除停用词；对英文文本做tokenization；将“不重要的”字、词替换为统一的符号；将数字替换为统一的符号；(中文中)将英文字符替换为统一的符号；字嵌入
-- 字节对编码，BPE
-	- 用一个新代号表示数据中最常见的bigram(可以是字节对、字符对、词语对等等)，不断迭代
-
-
-## OOV问题(词汇表外)
-
-### 产生原因
-真实使用场景可能会输入训练文本中不存在的词
-### 处理方式
-- 将所有未知单词都替换为一个特殊的OOV标记，然后将其当做一个单独的单词来处理。
-	- 但是这种方法可能会导致模型的性能下降，因为OOV标记无法提供关于未知单词的任何语义信息。
-
-## GPT-2 - Languager Models are Unsupervised Multitask Learners
-
-### abstract and intro
-- 在之前的机器学习系统中，主要方法是收集一组训练示例数据集，展示其正确行为，训练系统模仿这些行为。
-	- 有助于创建专家系统，但是在输入多样性的表现上不稳定
-- GPT-2 在WebText (大型网页数据集) 上训练，没有在明确监督的情况下可以学习到很多任务。**(对应了标题 Unsupervised Multitask Learners)**
-	- 希望一个更通用的系统，不需要位每个任务手动创建和标记训练数据集
-	- “我们猜测，一个具有足够能力的语言模型将开始学习推断和执行自然语言序列中展示的任务，以便更好地预测它们，而不管它们的获取方法如何”
-
-### approach
-- core is language modeling
-- 学习单一任务表示 p(output | input)
-- 通用系统表示为 p(output | intput, task)
-	- 在很多领域中，任务切换都得在架构级别实现
-	- 而语言提供了一种灵活的方式指定任务
-		- 翻译任务可以写成 (translate to French，English text，French text)
-		- 阅读理解任务可以写成(answer the question，document，question，answer)
-		- MQAN就是这样一种Single Model
-			- 记忆-问题-答案网络，一种深度学习模型，根据给定的输入格式（问题和相关文本信息）回答问题
-			- 核心在于记忆机制，该机制允许模型存储和检索信息
-#### Dataset - WebText
-- 没有采用传统的文本数据集，而是创建了一个强调文档质量的抓虫
-	- 抓取了reddit的出站链接（通过reddit上的karma来评判链接是否有意义、有趣）
-	- 得到了WebText
-- **WebText**
-	- 45M 链接内的文本数据
-	- 去重和清洗，大约 8M 个文档，40GB 文本
-	- 删除了所有 Wikipedia 文档，因为可能在评估任务中出现
-#### Input Representation - BPE
-- "通用语言模型（LM）应该能够计算（并生成）任何字符串的概率。"
-- 预处理步骤通常有：小写化，tokenizaiton、OOV
-	- 会限制语言模型的能力
-- **byte-level LMs** vs. **word-level LMs**
-	- byte级别可以用utf-8字节序列表示unicode字符串，但是目前 byte LMs 处理能力不如 word LMs
-- **BPE (Byte Pair Encoding)** on Byte Level
-	- 字节对编码，尽管名称中含有“Byte”，但是实际上通常处理的是Unicode码点而不是字节
-		- 但是如果采用Unicode码点，初始字典就会有130000+
-	- 因此在GPT-2中，采用的是字节维度。初始字典只有 256个 UTF-8字符，其他任何字符只需要通过合并即可组成
-	- 最终将词汇量扩展到50257 = 256 + 50000 + 1 "<|endoftext|>"
-
-#### Model - Transformer
-- 调整Transformer的decoder，将Layer normalization移动到每个decoder子块的输入位置，并在最后一个decoder子块后添加一个额外的Layer normalization
-- 初始化时残差层的权重乘以 $\frac{1}{\sqrt{N}}$, $N$是残差层的数量，抑制**残差流内方差累计**的方法
-- BPE词汇量扩大到50257个
-- batch size大小设为512
-
-### Experients
-- CBT: 儿童书测试，命名实体、动词、介词
-- LAMBADA: 预测句子最后一个单词，对文本长距离依赖的建模
-- Winograd Schema: 句子歧义理解
-- Reading Comprehension, Summarization, Translation, Question Answering
-
 # ML - 机器学习
-
 
 ## 不平衡学习
 
@@ -553,6 +383,175 @@ ResNet，即残差网络，是一种深度学习模型，它通过引入“残�
 3. 切线与 x 轴的交点作为新的猜测值 x₁；  
 4. 重复步骤2和步骤3，直到满足所需的精度或达到最大迭代次数
 
+
+# Embodied Intelligence - 具身智能
+
+AI的下一个浪潮是具身智能。
+
+	特斯拉 2023 年股东会上，马斯克表示，人形机器人将是今后特斯拉主要的长期价值来源，“如果人形机器人和人的比例是 2 比 1 左右，那么人们对机器人的需求量可能是100 亿乃至 200 亿个，远超电动车的数量”。英伟达创始人黄仁勋在 ITF World 2023 半导体大会上也表示，AI 下一个浪潮将是“具身智能”。
+
+具身智能几乎涉及了人工智能的所有领域。
+
+	自然语言理解、逻辑推理、机器视觉、运动控制、机器学习、运动规划、机械控制
+
+相关产业
+
+- 传感器：触觉+视觉+声音传感器、机器视觉
+- 执行器：减速器（30%）、伺服系统（20%）、微电机（10%）等
+- 控制：控制器、工控系统、AI系统
+
+生产力增长，带来经济增长，就业机会增加，社会福利改善。
+
+## PIE 结构
+
+Perception - Imagination - Execution
+
+Perception：全感知 or 具身交互感知
+
+Imagination：想象，具身任务模拟
+
+Execution：执行
+
+## 相关模型
+### Google - PaLM-E
+
+PaLM-E本身是个多模态的大模型，不仅能理解文本，还能理解图片（ViT），可以理解图片中的语义信息
+
+### Nvidia - VIMA
+
+三种token类型：text, image(object), action
+
+### Meta - SAM
+
+Segment Anything Model（SAM，分割一切模型），根据文本指令等方式实现图像分割。零样本（zero-shot）或简单prompt下，对任意图片进行精细分割。
+
+SAM证明，多种多样的分割任务是可以被一个通用大模型涵盖的。
+
+我们期待一个模型可以无监督完成分割、检测、识别、跟踪等所有CV任务，届时视觉大模型应用会得到极大发展。
+
+### Microsoft Research - ChatGPT for Robotics
+
+研究者使用ChatGPT生成机器人的高层控制代码，从而可以通过自然语言和ChatGPT交流，使用ChatGPT来控制机械臂、无人机、移动机器人等机器人。
+
+
+
+# NLP - 自然语言处理
+
+## T5
+
+T5, Text-to-Text Transfer Transformer，将翻译、分类、回归、摘要生成等任务统一转为Text-to-Text任务，使他们在训练时能够使用相同的目标函数。
+
+### **和原始transformer的不同点**
+
+- remove the Layer Norm bias
+	- 原先的layer norm在归一化的张量后要训练缩放因子 $\gamma$ 和偏置 $\beta$ ，得到最终的 $y=\gamma\hat{x}+\beta$ ，现在移去了bias
+- place the Layer Normalization outside the residual path
+	- 
+- use a different position embedding
+
+### **数据集 - C4**
+
+作者对公开爬取的网页数据集Common Crawl进行了过滤，去掉一些重复的、低质量的，看着像代码的文本等，并且最后只保留英文文本，得到数据集C4: the Colossal Clean Crawled Corpus。
+
+### **输入输出格式**
+
+在下游任务上fine-tune模型时，为了告诉模型当前要做何种任务，我们会给每条输入样本加一个与具体任务相关的前缀。
+
+- 翻译前缀translate English to German:
+- 分类前缀cola sentence:
+- 摘要前缀summarize:
+
+注意这里每个任务前缀的选择可以认为是一种超参，即人为设计前缀样式。作者发现不同的前缀对模型的影响有限，因此没有做大量实验比较选择不同前缀的结果。
+
+### **网络结构**
+
+不同于BERT或GPT仅使用Transformer结构的一部分，T5的baseline模型直接采用标准的Transformer encoder-decoder结构，以便在生成任务和分类任务上都能取得不错的效果。 具体来说，baseline模型结构的encoder部分和BERT-base模型(12层)的大小一样，而decoder部分和encoder大小相似，因此baseline模型的参数量基本是BERT-base模型的2倍。
+
+### **预训练目标**
+
+类似BERT的masked language modeling目标函数。
+
+
+## 掩码语言建模 - MLM
+
+Masked Language Modeling，输入文本中的一些单词会被随机遮蔽（通常用一个特殊的标记，如`[MASK]`），模型的任务是根据上下文预测这些被遮蔽的单词。
+
+### **具体步骤**
+
+1. **输入文本处理**：从输入句子中随机选择一定比例的单词（例如15%），将它们替换为`[MASK]`标记。
+2. **模型训练**：模型接收包含`[MASK]`标记的句子，并尝试预测这些被遮蔽的单词。模型的输出是对每个被遮蔽位置的单词的概率分布。
+3. **损失计算**：使用交叉熵损失函数计算模型预测的概率分布与真实单词之间的差异。目标是最小化这个损失。
+
+
+## Byte Pair Encoding (BPE) - 字节对编码
+
+- 提出背景：
+	- 对中文和英文来说，字符级别的嵌入都有一定的困难：英文中有意义的文本会比较长(输入序列对应的时间步较多)，训练慢，遗忘严重；中文有几万个字(分类标签较多)，训练慢。
+	- 词嵌入的困难就更明显了，当前主要语言的词汇表都是十万级别大小，导致模型训练非常耗时。
+		- 控制词汇表规模，大家做了很多尝试:去除停用词；对英文文本做tokenization；将“不重要的”字、词替换为统一的符号；将数字替换为统一的符号；(中文中)将英文字符替换为统一的符号；字嵌入
+- 字节对编码，BPE
+	- 用一个新代号表示数据中最常见的bigram(可以是字节对、字符对、词语对等等)，不断迭代
+
+
+## OOV问题(词汇表外)
+
+### 产生原因
+真实使用场景可能会输入训练文本中不存在的词
+### 处理方式
+- 将所有未知单词都替换为一个特殊的OOV标记，然后将其当做一个单独的单词来处理。
+	- 但是这种方法可能会导致模型的性能下降，因为OOV标记无法提供关于未知单词的任何语义信息。
+
+## GPT-2 - Languager Models are Unsupervised Multitask Learners
+
+### abstract and intro
+- 在之前的机器学习系统中，主要方法是收集一组训练示例数据集，展示其正确行为，训练系统模仿这些行为。
+	- 有助于创建专家系统，但是在输入多样性的表现上不稳定
+- GPT-2 在WebText (大型网页数据集) 上训练，没有在明确监督的情况下可以学习到很多任务。**(对应了标题 Unsupervised Multitask Learners)**
+	- 希望一个更通用的系统，不需要位每个任务手动创建和标记训练数据集
+	- “我们猜测，一个具有足够能力的语言模型将开始学习推断和执行自然语言序列中展示的任务，以便更好地预测它们，而不管它们的获取方法如何”
+
+### approach
+- core is language modeling
+- 学习单一任务表示 p(output | input)
+- 通用系统表示为 p(output | intput, task)
+	- 在很多领域中，任务切换都得在架构级别实现
+	- 而语言提供了一种灵活的方式指定任务
+		- 翻译任务可以写成 (translate to French，English text，French text)
+		- 阅读理解任务可以写成(answer the question，document，question，answer)
+		- MQAN就是这样一种Single Model
+			- 记忆-问题-答案网络，一种深度学习模型，根据给定的输入格式（问题和相关文本信息）回答问题
+			- 核心在于记忆机制，该机制允许模型存储和检索信息
+#### Dataset - WebText
+- 没有采用传统的文本数据集，而是创建了一个强调文档质量的抓虫
+	- 抓取了reddit的出站链接（通过reddit上的karma来评判链接是否有意义、有趣）
+	- 得到了WebText
+- **WebText**
+	- 45M 链接内的文本数据
+	- 去重和清洗，大约 8M 个文档，40GB 文本
+	- 删除了所有 Wikipedia 文档，因为可能在评估任务中出现
+#### Input Representation - BPE
+- "通用语言模型（LM）应该能够计算（并生成）任何字符串的概率。"
+- 预处理步骤通常有：小写化，tokenizaiton、OOV
+	- 会限制语言模型的能力
+- **byte-level LMs** vs. **word-level LMs**
+	- byte级别可以用utf-8字节序列表示unicode字符串，但是目前 byte LMs 处理能力不如 word LMs
+- **BPE (Byte Pair Encoding)** on Byte Level
+	- 字节对编码，尽管名称中含有“Byte”，但是实际上通常处理的是Unicode码点而不是字节
+		- 但是如果采用Unicode码点，初始字典就会有130000+
+	- 因此在GPT-2中，采用的是字节维度。初始字典只有 256个 UTF-8字符，其他任何字符只需要通过合并即可组成
+	- 最终将词汇量扩展到50257 = 256 + 50000 + 1 "<|endoftext|>"
+
+#### Model - Transformer
+- 调整Transformer的decoder，将Layer normalization移动到每个decoder子块的输入位置，并在最后一个decoder子块后添加一个额外的Layer normalization
+- 初始化时残差层的权重乘以 $\frac{1}{\sqrt{N}}$, $N$是残差层的数量，抑制**残差流内方差累计**的方法
+- BPE词汇量扩大到50257个
+- batch size大小设为512
+
+### Experients
+- CBT: 儿童书测试，命名实体、动词、介词
+- LAMBADA: 预测句子最后一个单词，对文本长距离依赖的建模
+- Winograd Schema: 句子歧义理解
+- Reading Comprehension, Summarization, Translation, Question Answering
 
 # Meta-Learning - 元学习
 
