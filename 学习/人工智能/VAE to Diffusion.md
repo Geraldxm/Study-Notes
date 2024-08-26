@@ -36,9 +36,28 @@ $$
 
 如果直接假设 $p(Z)$ 是正态分布，然后从中采样 $z_k$ ，很难对应到原来的真实 $x_k$ 。但是现在 $p(Z|x_k)$ 专属于 $x_k$ ，可以说从中采样出来的 $z_k$ 应该还原到 $x_k$ 中去。
 
+如何得到 $p(Z|x_k)$ 这一个正态分布的均值和方差？粗暴的思路就是使用神经网络来拟合。
+
+ 构建两个神经网络 $\mu_k = f_1(x_k)$ ， $log {\sigma^2}=f_2(x_k)$ 。用 log 拟合的原因是 log 可正可负，而 $\sigma^2$ 总是非负的。
+
+得到均值和方差后，就得到了这个正态分布，然后可以采样 $z_k$ ，经过一个生成器得到 $\hat{x}_k=g(z_k)$ 
+
+现在可以进行最小化 $D^2(\hat{x}_k,x_k)$ 的操作。
+
+![VAE结构示意图](https://pic1.zhimg.com/80/v2-36c7da0b2fe37bd021699532a2cff1e8_1440w.webp)
+
+## 分布标准化
+
+我们希望最小化 $D^2(\hat{x}_k,x_k)$ ，而重构得到 $z_k$ 会受到噪声的影响，因此神经网络可能会尽可能让方差为 0，但这样就会丧失随机性。
+
+因此 VAE 希望所有的 $p(Z|X)$ 贴近标准正态分布，可以防止噪声为 0。
+
+![](https://pic3.zhimg.com/80/v2-a3f264a40db57e010b7ebf0253198726_1440w.webp)
+
+
+
 
 # GAN - 生成式对抗神经网络
 
 [PaperWeekly 第41期 | 互怼的艺术：从零直达 WGAN-GP (qq.com)](https://mp.weixin.qq.com/s?__biz=MzIwMTc4ODE0Mw==&mid=2247484880&idx=1&sn=4b2e976cc715c9fe2d022ff6923879a8&chksm=96e9da50a19e5346307b54f5ce172e355ccaba890aa157ce50fda68eeaccba6ea05425f6ad76&scene=21#wechat_redirect)
 
-]
