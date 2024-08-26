@@ -76,6 +76,24 @@ $$
 
 ![](https://pic1.zhimg.com/80/v2-39d484abe79242a398d6f57ee3d7dc04_1440w.webp)
 
+## 总结和直觉部分
+
+![VAE的本质结构](https://pic1.zhimg.com/80/v2-784891edddff506ea1670c81767e993c_1440w.webp)
+
+它本质上就是在我们常规的自编码器的基础上，对 encoder 的结果（在VAE中对应着计算均值的网络）加上了“[高斯噪声](https://www.zhihu.com/search?q=%E9%AB%98%E6%96%AF%E5%99%AA%E5%A3%B0&search_source=Entity&hybrid_search_source=Entity&hybrid_search_extra=%7B%22sourceType%22%3A%22article%22%2C%22sourceId%22%3A34998569%7D)”，使得结果 decoder 能够对噪声有[鲁棒性](https://www.zhihu.com/search?q=%E9%B2%81%E6%A3%92%E6%80%A7&search_source=Entity&hybrid_search_source=Entity&hybrid_search_extra=%7B%22sourceType%22%3A%22article%22%2C%22sourceId%22%3A34998569%7D)；而那个额外的 KL loss（目的是让均值为 0，方差为 1），事实上就是相当于对 encoder 的一个正则项，希望 encoder 出来的东西均有零均值。
+
+另外一个 encoder（对应着计算方差的网络）的作用呢？它是用来**动态调节噪声的强度**的。
+
+当 decoder 还没有训练好时（重构误差远大于 KL loss），就会适当降低噪声（KL loss 增加），使得拟合起来容易一些（重构误差开始下降）。
+
+反之，如果 decoder 训练得还不错时（重构误差小于 KL loss），这时候噪声就会增加（KL loss 减少），使得拟合更加困难了（重构误差又开始增加），这时候 decoder 就要想办法提高它的生成能力了。
+
+重构的过程是希望没噪声的，而 KL loss 则希望有高斯噪声的，两者是对立的。**所以，VAE 跟 GAN 一样，内部其实是包含了一个对抗的过程**，只不过它们两者是混合起来，共同进化的。
+
+VAE 的名字中“变分”，是因为它的推导过程用到了 KL 散度及其性质。
+
+## 条件 VAE
+
 
 
 # GAN - 生成式对抗神经网络
