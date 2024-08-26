@@ -54,6 +54,27 @@ $$
 
 ![](https://pic3.zhimg.com/80/v2-a3f264a40db57e010b7ebf0253198726_1440w.webp)
 
+如何实现向 $\mathcal{N}(0,1)$ 看齐呢？最直接的方法就是加入loss
+$$
+\mathcal{L}_u=||f_1(X_k)||^2 \space和 \space\mathcal{L}_{log_{\sigma^2}}=||f_2(X_k)||^2
+\tag{3}
+$$
+
+此时只要希望两者接近 0 即可。
+
+两个 loss 需要调整合适的比例。作者通过添加另一个 loss，来避免比例的问题。
+
+	计算了一般正态分布与标准正态分布的KL散度
+
+![](https://pic4.zhimg.com/80/v2-af1049578e84eddf1c817422aa8a3bbf_1440w.webp)
+
+![推导过程](https://pic3.zhimg.com/80/v2-7a3c7ea64e7f11c475cf35cd44fa3ca2_1440w.webp)
+
+## 重参数技巧
+
+我们希望所有的 $p(Z|X)$ 贴近标准正态分布。采样过程不可导，采样结果可导，通过参数变换，使采样的结果能够参与模型训练。
+
+![](https://pic1.zhimg.com/80/v2-39d484abe79242a398d6f57ee3d7dc04_1440w.webp)
 
 
 
