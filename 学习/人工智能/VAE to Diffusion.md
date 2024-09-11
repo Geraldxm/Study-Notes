@@ -71,6 +71,12 @@ $$
 ![](https://pic4.zhimg.com/80/v2-af1049578e84eddf1c817422aa8a3bbf_1440w.webp)
 
 ![推导过程](https://pic3.zhimg.com/80/v2-7a3c7ea64e7f11c475cf35cd44fa3ca2_1440w.webp)
+$$\begin{array}{l}
+K L\left(N\left(\mu, \sigma^{2}\right) \| N(0,1)\right) \\
+=\int \frac{1}{\sqrt{2 \pi \sigma^{2}}} e^{-(x-\mu)^{2} / 2 \sigma^{2}}\left(\log \frac{e^{-(x-\mu)^{2} / 2 \sigma^{2}} / \sqrt{2 \pi \sigma^{2}}}{e^{-x^{2} / 2} / \sqrt{2 \pi}}\right) d x \\
+=\int \frac{1}{\sqrt{2 \pi \sigma^{2}}} e^{-(x-\mu)^{2} / 2 \sigma^{2}} \log \left\{\frac{1}{\sqrt{\sigma^{2}}} \exp \left\{\frac{1}{2}\left[x^{2}-(x-\mu)^{2} / \sigma^{2}\right]\right\}\right\} d x \\
+=\frac{1}{2} \int \frac{1}{\sqrt{2 \pi \sigma^{2}}} e^{-(x-\mu)^{2} / 2 \sigma^{2}}\left[-\log \sigma^{2}+x^{2}-(x-\mu)^{2} / \sigma^{2}\right] d x
+\end{array}$$
 
 ## 重参数技巧
 
@@ -112,4 +118,6 @@ VAE 的名字中“变分”，是因为它的推导过程用到了 KL 散度及
 # GAN - 生成式对抗神经网络
 
 [PaperWeekly 第41期 | 互怼的艺术：从零直达 WGAN-GP (qq.com)](https://mp.weixin.qq.com/s?__biz=MzIwMTc4ODE0Mw==&mid=2247484880&idx=1&sn=4b2e976cc715c9fe2d022ff6923879a8&chksm=96e9da50a19e5346307b54f5ce172e355ccaba890aa157ce50fda68eeaccba6ea05425f6ad76&scene=21#wechat_redirect)
+
+# DDPM
 
