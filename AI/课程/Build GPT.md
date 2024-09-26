@@ -53,8 +53,6 @@ Andrej Karpathy
 - 为什么不直接使用整数编码（如utf-8），而要进行tokenization？
 
 - vocab_size应该多大？
-	- 
-
 
 - tokenization基本过程：
 	- 将字符串标记化为一些整数
