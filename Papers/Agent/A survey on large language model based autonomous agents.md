@@ -37,11 +37,61 @@ GOAL: perform diverse tasks by using LLMs
 ###  2.1 Agent architecture design
 #### 2.1.1 Profiling module
 - aims to indicate the profiles of the agent roles
+- encompass
+	- personal basic information
+	- personalities
+	- relationships
+- 为代理创建特定的配置文件
+	- 手工制作 Handcrafting
+		- flexible but labor-intensive
+	- LLM 生成
+		- can be few-shot
+		- time-saving but lack precision
+	- 数据对齐方法
+		- 使用选民的真实属性
 
 #### 2.1.2 Memory module
-
+- 存储感知到的信息，形成记忆
+- memory structure
+	- 从人类记忆得到灵感，有长时记忆和短时记忆
+	- 短期记忆类似transformer的上下文窗口
+	- 长期记忆类似外部存储向量，需要快速查询和检索
+	- 统一内存 Unified Memory
+		- LLM上下文有限制，难以将所有内存放入prompt
+	- 混合存储 Hybrid Memory
+		- 明确模拟了长短期记忆
+		- 短期记忆缓冲最近的感知
+		- 长期记忆巩固重要信息
+		- 有多种实现方式
+- memory formats
+	- 自然语言内存
+		- 语义丰富好观察
+	- embedding
+		- 检索效率高
+	- databases
+		- 代理使用sql语句
+	- structured list
+		- 适合存储结构化的数据
+- memory operations
+	- memory reading
+		- 关键是如何从历史行为中提取有价值的信息
+		- 可以考虑 recency, relevance, importance，调比例设置重要程度
+	- memory writing
+		- 如何存储相似的信息？
+			- 计数，压缩
+		- 当内存溢出，如何删除信息
+			- 换出策略
+	- **memory refleting**
+		- 智能体的记忆反思能力如何使其能够从过去的经验中提炼出有价值的知识和见解，进一步激发更高层次的认知和决策能力。这种能力不仅限于直接的经历回顾，而是涉及到更深层次的探索和反思过程。
 #### 2.1.3 Planning module
-
+- 旨在赋予agent任务分解和解决能力
+- 没有反馈的计划 planning without feedback
+	- 单路径推理，任务被分解为几个级联的中间步骤
+		- CoT, Zero-shot CoT, Re-Prompting (在生成计划前检查步骤是否满足条件), ReWOO (计划和观察分离)
+	- 多路径推理，Self-Consistent COT, ToT, GoT (图状), AoT, RAP
+	- external planner，LLM+P (转换为PDDL), LLM-DP, CO-LLM (认为LLM擅长指定高层次的计划，因此低层次的任务使用外部计划器)
+- 有反馈的计划 Planning with feedback
+	- 
 #### 2.1.4 Action module
 
 
