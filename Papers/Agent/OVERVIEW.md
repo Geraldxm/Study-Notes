@@ -1,7 +1,7 @@
 # 群公告进度
 ## 24.10.09
 
-Agent的survey可以看这个：A survey on large language model based autonomous agents
+Agent的survey可以看这个：~~A survey on large language model based autonomous agents~~
 
 Agent Planning的survey: 
 (2024, Survey) Understanding the planning of LLM agents: A survey https://arxiv.org/abs/2402.02716 
