@@ -91,17 +91,63 @@ GOAL: perform diverse tasks by using LLMs
 	- 多路径推理，Self-Consistent COT, ToT, GoT (图状), AoT, RAP
 	- external planner，LLM+P (转换为PDDL), LLM-DP, CO-LLM (认为LLM擅长指定高层次的计划，因此低层次的任务使用外部计划器)
 - 有反馈的计划 Planning with feedback
-	- 
+	- 人类个体可以根据外部反馈迭代制定计划
+	- 从环境、人类、模型中获得
+	- 从环境
+		- ReAct: 思维-动作-观察
+		- Voyager: 中间进度，执行错误，自我验证
+		- DEPS: 建议告知代理任务失败的详细原因，使他们能够更有效地修改计划
+		- Inner Monologue: 在agent采取行动后向其提供三种类型的反馈，1-任务成功，2-passive场景描述，3-active场景描述
+	- 从人类
+		- Inner Monologue: 代理旨在在3D视觉环境中执行高级自然语言指令。它具有主动征求人类对场景描述的反馈的能力
+	- 从模型
 #### 2.1.4 Action module
+- 将agent的决策转化为具体的结果
+- 受profile，memory，planning的影响
+- action goal
+	- 行动的预期结果是什么
+- action production
+	- 动作如何生成
+	- memory recollection
+	- plan following
+- action space
+	- 有哪些可用的动作
+	- external tools
+		- APIs
+			- TaskMatrix.AI: 数百万个API
+		- Databases
+		- External models
+		- Internal knowledge
+- action impact
+	- 动作的影响是什么
+	- 环境变化
+	- 内部状态变化
+	- 触发新的行动
+### 2.2 Agent capability acquisition
 
+agent的架构类似于“硬件”设计，而处理特定任务的能力、技能和经验可以视为“软件”资源。
 
+一般通过是否需要微调来对 LLM 进行分类。
 
+#### with fine-tuning
+- 使用人工注释数据集
+- 使用 LLM 生成
+
+#### without fine-tuning
+- prompt engineering
+- designing proper agent evolution mechanisms
+	- 试错法 trail-and-error
+	- 集智 crowd-sourcing
+	- 经验积累 experience accumulation
+	- 自我驱动 self-driven
+		- 自主设定目标，探索环境和接受激励
+		- 多个模型互相对话来解决问题
+		- 
 ## 3. Diverse Applications
 
 ## 4. Evaluation Strategies
 
 ## 5. Challenges and Future Directions
-
 
 # **Q&As**
 
