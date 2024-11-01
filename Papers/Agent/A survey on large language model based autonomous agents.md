@@ -1,6 +1,9 @@
 # **Concepts**
 
-## Autonomous agentsAutonomous agent
+**ALM 增强语言模型**
+
+增强语言模型（Augmented Language Model，简称ALM）是一种结合了语言模型与其他功能或数据源的系统，旨在提高语言理解和生成的能力。传统的语言模型主要基于大规模的数据集进行训练，能够生成文本、回答问题、翻译语言等。
+## Autonomous agents
 
 能够自主感知、决策和行动的计算系统或实体。它们在没有人为干预的情况下，可以根据环境的变化和内部目标做出决策，并执行相应的行动。
 
@@ -60,7 +63,7 @@ GOAL: perform diverse tasks by using LLMs
 		- LLM上下文有限制，难以将所有内存放入prompt
 	- 混合存储 Hybrid Memory
 		- 明确模拟了长短期记忆
-		- 短期记忆缓冲最近的感知
+		- 短期记忆缓冲buffer最近的感知
 		- 长期记忆巩固重要信息
 		- 有多种实现方式
 - memory formats
